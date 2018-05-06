@@ -5,13 +5,13 @@ export default {
 		version: 'v1'
 	},
 	bdd: {
-		host: 'localhost',
-		port: '3306',
-		username: 'root',
-		password: 'root',
-		database: ''
+		host: 'mongodb://127.0.0.1',
+		port: '27017',
+		username: '',
+		password: '',
+		database: 'kndgs'
 	},
 	logger: {
-		level: 'debug'
+		level: 'info'
 	}
 };
