@@ -1,7 +1,8 @@
 export const STATUSES = {
-  badRequest: 420,
+  badRequest: 400,
   unprocessEntity: 422,
   created: 201,
   ok: 200,
-  internalError: 500
+  internalError: 500,
+  unauthorized: 401
 };

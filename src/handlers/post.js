@@ -3,32 +3,79 @@ import {STATUSES} from '../utils/http';
 
 const postHandler = {
   create: async(req, res) => {
-    try {
-      const {link, title, desc} = req.body;
-      const postInstance = new PostModel({
-        link,
-        title,
-        desc
-      });
-      await postInstance.save()
-        .then((data) => {
-          res
-            .status(STATUSES.created)
-            .json(data);
-        })
-        .catch((err) => {
-          res.status(STATUSES.internalError).send({
-            success: false,
-            message: err.message
-          });
-        });
-    } catch (e) {
-      global.__LOGGER__.error('Handler post error: ', e);
+    const {link, title, desc} = req.body;
+    const postInstance = new PostModel({
+      link,
+      title,
+      desc,
+      author: req.session.userId
+    });
+    await postInstance.save()
+    .then((data) => {
+      res
+        .status(STATUSES.created)
+        .json(data);
+    })
+    .catch((err) => {
       res.status(STATUSES.internalError).send({
-        message: e.message,
-        success: false
+        success: false,
+        message: err.message
       });
-    }
+    });
+  },
+  getAll: async(req, res) => {
+    await PostModel.find({}, null, {sort: {'createdAt': 1}})
+    .then((data) => {
+      res.status(STATUSES.ok)
+      .json(data);
+    })
+    .catch(err => {
+      res.status(STATUSES.internalError).send({
+        success: false,
+        message: err.message
+      });
+    });
+  },
+  upVote: async(req, res) => {
+    const {postId} = req.params;
+    // TODO check if already voted
+    await PostModel.findOne({_id: postId})
+    .then(async doc => {
+      if (!doc) throw new Error('Unknown post');
+      console.log(doc);
+      doc.upVote();
+      return doc.save();
+    })
+    .then(data => {
+      res.status(STATUSES.created)
+      .json(data);
+    })
+    .catch(err => {
+      res.status(STATUSES.unprocessEntity).send({
+        success: false,
+        message: err.message
+      });
+    });
+  },
+  downVote: async(req, res) => {
+    const {postId} = req.params;
+    // TODO check if already voted
+    await PostModel.findOne({_id: postId})
+    .then(async doc => {
+      if (!doc) throw new Error('Unknown post');
+      doc.downVote();
+      return doc.save();
+    })
+    .then(data => {
+      res.status(STATUSES.created)
+      .json(data);
+    })
+    .catch(err => {
+      res.status(STATUSES.unprocessEntity).send({
+        success: false,
+        message: err.message
+      });
+    });
   }
 };
 

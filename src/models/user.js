@@ -6,13 +6,15 @@ export const userSchema = new Schema({
     type: String,
     trim: true,
     index: true,
-    required: true
+    required: true,
+    unique: true
   },
   name: {
     type: String,
     trim: true,
     index: true,
-    required: true
+    required: true,
+    unique: true
   },
   pwd: {
     type: String,
@@ -22,18 +24,6 @@ export const userSchema = new Schema({
 });
 
 userSchema.pre('save', function(next) {
-  const saltRounds = 10;
-  bcrypt.hash(this.pwd, saltRounds, (err, hash) => {
-    if (err) {
-      global.__LOGGER__.error('Generate password error: ', err);
-      return;
-    }
-    this.pwd = hash;
-    next();
-  });
-});
-
-userSchema.pre('find', function(next) {
   const saltRounds = 10;
   bcrypt.hash(this.pwd, saltRounds, (err, hash) => {
     if (err) {

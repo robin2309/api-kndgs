@@ -15,8 +15,43 @@ export const postSchema = new Schema({
   desc: {
     type: String,
     trim: true
+  },
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  upVotes: {
+    type: Number,
+    default: 0
+  },
+  downVotes: {
+    type: Number,
+    default: 0
   }
 });
+
+postSchema.options = {
+  toJSON: {
+    virtuals: true,
+    transform(doc, ret) {
+      delete ret._id;
+    }
+  }
+};
+
+postSchema.methods = {
+  upVote() {
+    this.upVotes++;
+  },
+  downVote() {
+    this.downVotes++;
+  }
+};
 
 const PostModel = mongoose.model('Post', postSchema);
 

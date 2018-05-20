@@ -17,6 +17,18 @@ const postValidator = {
     } else {
       await next();
     }
+  },
+  vote: async(req, res, next) => {
+    const {postId} = req.params;
+    const isValidPostId = postId && validator.isAlphanumeric(postId);
+    if (!isValidPostId) {
+      res.status(STATUSES.unprocessEntity).send({
+        success: false,
+        message: 'invalid post id'
+      });
+    } else {
+      await next();
+    }
   }
 };
 

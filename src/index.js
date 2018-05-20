@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import session from 'express-session';
 
 import {getConfigs} from '../configs';
 import {getLogger} from './utils/logger';
@@ -15,7 +16,11 @@ const app = express();
 global.__LOGGER__.info('Starting up API v1 ...');
 
 app.use(bodyParser.json());
-
+app.use(session({
+  secret: 'monsecret',
+  resave: false,
+  saveUninitialized: false
+}));
 app.use(`${global.__CONFIG__.api.prefix}/${global.__CONFIG__.api.version}`, apiRoutes);
 
 app.listen(global.__CONFIG__.api.port, () => {
