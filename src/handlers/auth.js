@@ -38,19 +38,23 @@ const userHandler = {
   },
 
   async logIn(req, res) {
-    const {login, pwd} = req.body;
+    const {username, password} = req.body;
     await UserModel.findOne({$or: [
-      {email: login}, {name: login}
+      {email: username}, {name: username}
     ]})
     .then((doc) => {
-      console.log(doc);
-      return doc.comparePasswords(pwd);
+      if (doc) return doc.comparePasswords(password);
+      else throw Error('User does not exist');
     })
     .then(user => {
       req.session.userId = user._id;
+      res.cookie('sid', user._id, { maxAge: 7 * 24 * 60 * 1000, httpOnly: true });
       res
         .status(STATUSES.ok)
-        .json({name: user.name});
+        .json({
+          name: user.name,
+          email: user.email
+        });
     })
     .catch((err) => {
       res.status(STATUSES.badRequest).send({

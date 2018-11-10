@@ -19,9 +19,9 @@ const userValidator = {
     }
   },
   logIn: async(req, res, next) => {
-    const {login, pwd} = req.body;
-    const isValidLogin = login && (validator.isAlphanumeric(login) || validator.isEmail(login));
-    const isValidPwd = pwd;
+    const {username, password} = req.body;
+    const isValidLogin = username && (validator.isAlphanumeric(username) || validator.isEmail(username));
+    const isValidPwd = password;
 
     if (!isValidLogin || !isValidPwd) {
       res.status(STATUSES.unprocessEntity).send({

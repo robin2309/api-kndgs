@@ -23,6 +23,7 @@ const postHandler = {
       });
     });
   },
+  
   getAll: async(req, res) => {
     await PostModel.find({}, null, {sort: {'createdAt': 1}})
     .then((data) => {
@@ -36,6 +37,7 @@ const postHandler = {
       });
     });
   },
+
   upVote: async(req, res) => {
     const {postId} = req.params;
     // TODO check if already voted
@@ -57,6 +59,7 @@ const postHandler = {
       });
     });
   },
+
   downVote: async(req, res) => {
     const {postId} = req.params;
     // TODO check if already voted
