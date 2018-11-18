@@ -23,14 +23,17 @@ const postHandler = {
       });
     });
   },
-  
+
   getAll: async(req, res) => {
     await PostModel.find({}, null, {sort: {'createdAt': 1}})
     .then((data) => {
       res.status(STATUSES.ok)
-      .json(data);
+      .json(
+        data.map(doc => doc.toJSON())
+      );
     })
     .catch(err => {
+      console.log(err);
       res.status(STATUSES.internalError).send({
         success: false,
         message: err.message

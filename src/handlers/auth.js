@@ -48,7 +48,7 @@ const userHandler = {
     })
     .then(user => {
       req.session.userId = user._id;
-      res.cookie('sid', user._id, { maxAge: 7 * 24 * 60 * 1000, httpOnly: true });
+      res.cookie('sid', user._id, { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true });
       res
         .status(STATUSES.ok)
         .json({

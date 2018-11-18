@@ -1,6 +1,10 @@
 import mongoose, { Schema } from 'mongoose';
 
 export const postSchema = new Schema({
+  _id: {
+    type: Schema.Types.ObjectId,
+    required: true
+  },
   link: {
     type: String,
     trim: true,
@@ -39,6 +43,7 @@ postSchema.options = {
   toJSON: {
     virtuals: true,
     transform(doc, ret) {
+      ret.id = ret._id;
       delete ret._id;
     }
   }
